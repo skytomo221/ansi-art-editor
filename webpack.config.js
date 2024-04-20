@@ -24,8 +24,8 @@ const config = {
     }),
     new WebpackPwaManifest({
       publicPath: ".",
-      short_name: "AA Editor",
-      name: "Ansi Art Editor",
+      short_name: "AAEditor",
+      name: "ANSI Art Editor",
       display: "standalone",
       start_url: "index.html",
       background_color: "#202124",
