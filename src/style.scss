@@ -1,0 +1,13 @@
+@import "@blueprintjs/core/lib/scss/variables";
+
+.app-root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100dvh;
+  background-color: $light-gray5;
+}
+
+.app-root.bp5-dark {
+  background-color: $dark-gray5;
+}
