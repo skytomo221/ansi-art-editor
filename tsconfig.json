@@ -5,7 +5,8 @@
     "module": "es6",
     "target": "es5",
     "allowJs": true,
-    "jsx": "react"
+    "jsx": "react",
+    "moduleResolution": "node"
   },
   "files": ["src/index.tsx"],
   "include": ["src/**/*"],
