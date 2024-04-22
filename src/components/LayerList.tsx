@@ -4,6 +4,7 @@ import { useLayersStore } from "../contexts/layersContext";
 import { Card } from "@blueprintjs/core";
 import { AddLayer } from "./AddLayer";
 import { LayerListItem } from "./LayerListItem";
+import { DoubleChevronDown } from "@blueprintjs/icons";
 
 export const LayerList = (): JSX.Element => {
   const layers = useLayersStore();
@@ -19,7 +20,9 @@ export const LayerList = (): JSX.Element => {
             layer={layer}
           />
         ))}
-        vvv vvv
+        <div className="flex">
+          <DoubleChevronDown className="center" />
+        </div>
         <Card>
           <strong>結果レイヤー</strong>
           <br />
