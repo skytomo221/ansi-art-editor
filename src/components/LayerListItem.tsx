@@ -6,6 +6,8 @@ import { LayerName } from "./LayerName";
 import { useLayersDispatch, useLayersStore } from "../contexts/layersContext";
 import { TextLayerProperty } from "./TextLayerProperty";
 import { TextLayer } from "../model/textLayer";
+import { ImageLayerProperty } from "./ImageLayerProperty";
+import { ImageLayer } from "../model/imageLayer";
 
 type Props = {
   index: number;
@@ -38,6 +40,8 @@ export const LayerListItem = ({ index, layer }: Props): JSX.Element => {
   function property() {
     if (layer instanceof TextLayer) {
       return <TextLayerProperty index={index} layer={layer} />;
+    } else if (layer instanceof ImageLayer) {
+      return <ImageLayerProperty index={index} layer={layer} />;
     } else {
       return <Card>{layer.name}</Card>;
     }
