@@ -1,15 +1,16 @@
-# 🚀 Welcome to your new awesome project!
+# ANSI Art Editor
 
-This project has been created using **webpack-cli**, you can now run
+This is a simple web-based editor for creating and editing ANSI art.
+It is built using React.
 
-```
+![Screenshot](./images/screenshot.png)
+
+## How to run
+
+```console
+git clone https://github.com/skytomo221/ansi-art-editor.git
+cd ansi-art-editor
+npm install
 npm run build
+npm run serve
 ```
-
-or
-
-```
-yarn build
-```
-
-to bundle your application
