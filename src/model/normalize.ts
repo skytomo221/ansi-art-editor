@@ -14,6 +14,10 @@ function sort(characters: CharacterWithPosition[]) {
 
 const newLine = "\n";
 
+function removeNewLines(characters: CharacterWithPosition[]) {
+  return characters.filter((c) => c.character.character !== newLine);
+}
+
 const range = (start: number, stop: number) =>
   Array.from({ length: stop - start }, (_, i) => start + i);
 
@@ -37,12 +41,12 @@ function padNewLines(characters: CharacterWithPosition[]) {
     const prev = characters[i - 1];
     if (
       prev.position.y !== character.position.y &&
-      character.character.character !== newLine
+      prev.character.character !== newLine
     ) {
       return [
         ...acc,
         {
-          position: { x: prev.position.x, y: prev.position.y + 1 },
+          position: { x: prev.position.x + 1, y: prev.position.y },
           character: new Character(newLine),
         },
         ...range(prev.position.y + 1, character.position.y).map((y) => ({
@@ -59,7 +63,13 @@ function padNewLines(characters: CharacterWithPosition[]) {
 function padSpaces(characters: CharacterWithPosition[]) {
   return characters.reduce((acc, character, i) => {
     if (i === 0) {
-      return [character];
+      return [
+        ...range(0, character.position.x).map((x) => ({
+          position: { x, y: 0 },
+          character: new Character(" "),
+        })),
+        character,
+      ];
     }
     const prev = characters[i - 1];
     if (
@@ -68,8 +78,20 @@ function padSpaces(characters: CharacterWithPosition[]) {
     ) {
       return [
         ...acc,
-        ...range(prev.position.x, character.position.x).map((x) => ({
-          position: { x, y: prev.position.y },
+        ...range(prev.position.x + 1, character.position.x).map((x) => ({
+          position: { x, y: character.position.y },
+          character: new Character(" "),
+        })),
+        character,
+      ];
+    } else if (
+      prev.position.y + 1 === character.position.y &&
+      0 < character.position.x
+    ) {
+      return [
+        ...acc,
+        ...range(0, character.position.x).map((x) => ({
+          position: { x, y: character.position.y },
           character: new Character(" "),
         })),
         character,
@@ -82,5 +104,5 @@ function padSpaces(characters: CharacterWithPosition[]) {
 export function normalize(
   characters: CharacterWithPosition[]
 ): CharacterWithPosition[] {
-  return padSpaces(padNewLines(offsetHead(sort(characters))));
+  return padSpaces(padNewLines(offsetHead(sort(removeNewLines(characters)))));
 }
