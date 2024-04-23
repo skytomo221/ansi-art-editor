@@ -9,6 +9,11 @@ type Props = {
   layer: ImageLayer;
 };
 
+const MAX_WIDTH = 64;
+const MAX_HEIGHT = 64;
+const RAW_MAX_WIDTH = 512;
+const RAW_MAX_HEIGHT = 512;
+
 function keepAspectRatio(
   width: number,
   height: number,
@@ -25,13 +30,34 @@ function keepAspectRatio(
   } else if (aspectRatio > maxAspectRatio) {
     return {
       width: maxWidth,
-      height: maxWidth / aspectRatio,
+      height: Math.round(maxWidth / aspectRatio),
     };
   } else {
     return {
-      width: maxHeight * aspectRatio,
+      width: Math.round(maxHeight * aspectRatio),
       height: maxHeight,
     };
+  }
+}
+
+function getImageData(image: HTMLImageElement) {
+  const start = performance.now();
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  if (context) {
+    const limitedSize = keepAspectRatio(
+      image.width,
+      image.height,
+      RAW_MAX_WIDTH,
+      RAW_MAX_HEIGHT
+    );
+    canvas.width = limitedSize.width;
+    canvas.height = limitedSize.height;
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    const imagedata = context.getImageData(0, 0, canvas.width, canvas.height);
+    const end = performance.now();
+    console.log(end - start);
+    return imagedata;
   }
 }
 
@@ -68,34 +94,21 @@ export const ImageLayerProperty = ({ index, layer }: Props): JSX.Element => {
       reader.onload = (e) => {
         const image = new Image();
         image.onload = () => {
-          const canvas = document.createElement("canvas");
-          const context = canvas.getContext("2d");
-          if (context) {
-            canvas.width = image.width;
-            canvas.height = image.height;
-            context.drawImage(image, 0, 0);
-            const maxSize = 64;
-            const limitedSize = keepAspectRatio(
-              image.width,
-              image.height,
-              maxSize,
-              maxSize
-            );
-            const imagedata = context.getImageData(
-              0,
-              0,
-              image.width,
-              image.height
-            );
-            layer.imagedata = imagedata;
-            layer.width = limitedSize.width;
-            layer.height = limitedSize.height;
-            dispatch({
-              type: "UPDATE_LAYER",
-              index,
-              layer,
-            });
-          }
+          const imagedata = getImageData(image);
+          layer.imagedata = imagedata;
+          const limitedSize = keepAspectRatio(
+            image.width,
+            image.height,
+            MAX_WIDTH,
+            MAX_HEIGHT
+          );
+          layer.width = limitedSize.width;
+          layer.height = limitedSize.height;
+          dispatch({
+            type: "UPDATE_LAYER",
+            index,
+            layer,
+          });
         };
         image.src = e.target?.result as string;
       };
