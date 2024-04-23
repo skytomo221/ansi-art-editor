@@ -20,10 +20,12 @@
 .app-screen pre {
   background-color: $dark-gray2;
   height: 100%;
+  overflow: auto;
 }
 
 .app-layer-list {
   display: block;
+  overflow: auto;
 }
 
 .app-layer-name {
