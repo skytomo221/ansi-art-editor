@@ -1,7 +1,6 @@
-import { Character } from "./character";
-import { CharacterWithPosition } from "./characterWithPosition";
+import { MovableType } from "./movableType";
 
-function sort(characters: CharacterWithPosition[]) {
+function sort(characters: MovableType[]) {
   const result = [...characters];
   result.sort((a, b) => {
     if (a.position.y === b.position.y) {
@@ -12,97 +11,97 @@ function sort(characters: CharacterWithPosition[]) {
   return result;
 }
 
-const newLine = "\n";
+const newLine = { character: "\n" };
 
-function removeNewLines(characters: CharacterWithPosition[]) {
-  return characters.filter((c) => c.character.character !== newLine);
+function removeNewLines(moveableTypes: MovableType[]): MovableType[] {
+  return moveableTypes.filter(
+    (movableType) => movableType.character !== newLine.character
+  );
 }
 
 const range = (start: number, stop: number) =>
   Array.from({ length: stop - start }, (_, i) => start + i);
 
-function offsetHead(characters: CharacterWithPosition[]) {
-  return characters.length === 0
-    ? characters
+function offsetHead(movableTypes: MovableType[]): MovableType[] {
+  return movableTypes.length === 0
+    ? movableTypes
     : [
-        ...range(0, characters[0].position.y).map((y) => ({
+        ...range(0, movableTypes[0].position.y).map((y) => ({
           position: { x: 0, y },
-          character: new Character(newLine),
+          ...newLine,
         })),
-        ...characters,
+        ...movableTypes,
       ];
 }
 
-function padNewLines(characters: CharacterWithPosition[]) {
-  return characters.reduce((acc, character, i) => {
+function padNewLines(movableTypes: MovableType[]): MovableType[] {
+  return movableTypes.reduce((acc, movableType, i) => {
     if (i === 0) {
-      return [character];
+      return [movableType];
     }
-    const prev = characters[i - 1];
+    const prev = movableTypes[i - 1];
     if (
-      prev.position.y !== character.position.y &&
-      prev.character.character !== newLine
+      prev.position.y !== movableType.position.y &&
+      prev.character !== newLine.character
     ) {
       return [
         ...acc,
         {
           position: { x: prev.position.x + 1, y: prev.position.y },
-          character: new Character(newLine),
+          ...newLine,
         },
-        ...range(prev.position.y + 1, character.position.y).map((y) => ({
+        ...range(prev.position.y + 1, movableType.position.y).map((y) => ({
           position: { x: 0, y },
-          character: new Character(newLine),
+          ...newLine,
         })),
-        character,
+        movableType,
       ];
     }
-    return [...acc, character];
-  }, [] as CharacterWithPosition[]);
+    return [...acc, movableType];
+  }, [] as MovableType[]);
 }
 
-function padSpaces(characters: CharacterWithPosition[]) {
-  return characters.reduce((acc, character, i) => {
+function padSpaces(movableTypes: MovableType[]): MovableType[] {
+  return movableTypes.reduce((acc, movableType, i) => {
     if (i === 0) {
       return [
-        ...range(0, character.position.x).map((x) => ({
+        ...range(0, movableType.position.x).map((x) => ({
           position: { x, y: 0 },
-          character: new Character(" "),
+          character: " ",
         })),
-        character,
+        movableType,
       ];
     }
-    const prev = characters[i - 1];
+    const prev = movableTypes[i - 1];
     if (
-      prev.position.y === character.position.y &&
-      prev.position.x + 1 < character.position.x
+      prev.position.y === movableType.position.y &&
+      prev.position.x + 1 < movableType.position.x
     ) {
       return [
         ...acc,
-        ...range(prev.position.x + 1, character.position.x).map((x) => ({
-          position: { x, y: character.position.y },
-          character: new Character(" "),
+        ...range(prev.position.x + 1, movableType.position.x).map((x) => ({
+          position: { x, y: movableType.position.y },
+          character: " ",
         })),
-        character,
+        movableType,
       ];
     } else if (
-      prev.position.y + 1 === character.position.y &&
-      0 < character.position.x
+      prev.position.y + 1 === movableType.position.y &&
+      0 < movableType.position.x
     ) {
       return [
         ...acc,
-        ...range(0, character.position.x).map((x) => ({
-          position: { x, y: character.position.y },
-          character: new Character(" "),
+        ...range(0, movableType.position.x).map((x) => ({
+          position: { x, y: movableType.position.y },
+          character: " ",
         })),
-        character,
+        movableType,
       ];
     }
-    return [...acc, character];
-  }, [] as CharacterWithPosition[]);
+    return [...acc, movableType];
+  }, [] as MovableType[]);
 }
 
-export function normalize(
-  characters: CharacterWithPosition[]
-): CharacterWithPosition[] {
-  return padSpaces(padNewLines(offsetHead(sort(removeNewLines(characters)))));
+export function normalize(movableTypes: MovableType[]): MovableType[] {
+  return padSpaces(padNewLines(offsetHead(sort(removeNewLines(movableTypes)))));
 }

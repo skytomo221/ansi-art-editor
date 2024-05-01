@@ -1,9 +1,9 @@
-import { CharacterWithPosition } from "./characterWithPosition";
+import { MovableType } from "./movableType";
 import { Coordinate } from "./coordinate";
 
 export abstract class Layer {
   name: string;
   position: Coordinate;
 
-  public abstract render(): CharacterWithPosition[];
+  public abstract render(): MovableType[];
 }

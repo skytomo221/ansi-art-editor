@@ -1,8 +1,8 @@
-import React, { FocusEvent } from "react";
-import { useLayersDispatch, useLayersStore } from "../contexts/layersContext";
-import { Character } from "../model/character";
+import React from "react";
+import { useLayersStore } from "../contexts/layersContext";
 import { CompoundLayer } from "../model/compoundLayer";
 import { normalize } from "../model/normalize";
+import { BLUE, GREEN, RED } from "../model/color";
 
 export const Screen = (): JSX.Element => {
   const store = useLayersStore();
@@ -16,22 +16,22 @@ export const Screen = (): JSX.Element => {
     <div className="app-screen">
       <pre>
         {characters.map((c) => {
-          const color = c.character.foregroundColor;
-          const backgroundColor = c.character.backgroundColor;
+          const color = c.foregroundColor ?? undefined;
+          const backgroundColor = c.backgroundColor ?? undefined;
           return (
             <span
               style={{
                 backgroundColor:
-                  "default" in backgroundColor
+                  backgroundColor === undefined
                     ? "unset"
-                    : `rgb(${backgroundColor.red}, ${backgroundColor.green}, ${backgroundColor.blue})`,
+                    : `rgb(${backgroundColor[RED]}, ${backgroundColor[GREEN]}, ${backgroundColor[BLUE]})`,
                 color:
-                  "default" in color
+                  color === undefined
                     ? "unset"
-                    : `rgb(${color.red}, ${color.green}, ${color.blue})`,
+                    : `rgb(${color[RED]}, ${color[GREEN]}, ${color[BLUE]})`,
               }}
             >
-              {c.character.character}
+              {c.character}
             </span>
           );
         })}

@@ -1,11 +1,9 @@
-import { Character } from "./character";
-import { CharacterWithPosition } from "./characterWithPosition";
+import { Type } from "./type";
+import { MovableType } from "./movableType";
 import { Coordinate } from "./coordinate";
 import { Layer } from "./layer";
 
-const fixNewLinesPosition = (
-  characters: CharacterWithPosition[]
-): CharacterWithPosition[] =>
+const fixNewLinesPosition = (characters: MovableType[]): MovableType[] =>
   characters.reduce((acc, character, i) => {
     if (i === 0) {
       return [character];
@@ -16,12 +14,12 @@ const fixNewLinesPosition = (
       {
         ...character,
         position:
-          prev.character.character === "\n"
+          prev.character === "\n"
             ? { x: acc[0].position.x, y: prev.position.y + 1 }
             : { x: prev.position.x + 1, y: prev.position.y },
       },
     ];
-  }, [] as CharacterWithPosition[]);
+  }, [] as MovableType[]);
 
 export class TextLayer extends Layer {
   text: string;
@@ -33,16 +31,16 @@ export class TextLayer extends Layer {
     this.text = text;
   }
 
-  public render(): CharacterWithPosition[] {
+  public render(): MovableType[] {
     const characters = this.text
       .split("")
-      .map((character, index): CharacterWithPosition => {
+      .map((character, index): MovableType => {
         return {
           position: {
             x: this.position.x + index,
             y: this.position.y,
           },
-          character: new Character(character),
+          character,
         };
       });
     return fixNewLinesPosition(characters);

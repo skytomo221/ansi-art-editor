@@ -1,7 +1,7 @@
-import { Character } from "./character";
-import { CharacterWithPosition } from "./characterWithPosition";
+import { MovableType } from "./movableType";
 import { Coordinate } from "./coordinate";
 import { Layer } from "./layer";
+import { ALPHA, BLUE, Color, GREEN, RED } from "./color";
 
 const sum = <T>(
   arr: T[],
@@ -19,14 +19,7 @@ const average = <T>(
 const range = (start: number, stop: number, step: number) =>
   Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step);
 
-type ColorWithAlpha = {
-  red: number;
-  green: number;
-  blue: number;
-  alpha: number;
-};
-
-const isTransparent = (color: ColorWithAlpha) => color.alpha < 0x7f;
+const isTransparent = (color: Color) => color[ALPHA] < 0x7f;
 
 export class ImageLayer extends Layer {
   imagedata: null | ImageData;
@@ -48,13 +41,13 @@ export class ImageLayer extends Layer {
     this.height = height;
   }
 
-  color(index: number): ColorWithAlpha {
-    return {
-      red: this.imagedata.data[index],
-      green: this.imagedata.data[index + 1],
-      blue: this.imagedata.data[index + 2],
-      alpha: this.imagedata.data[index + 3],
-    };
+  color(index: number): Color {
+    return new Uint8ClampedArray([
+      this.imagedata.data[index],
+      this.imagedata.data[index + 1],
+      this.imagedata.data[index + 2],
+      this.imagedata.data[index + 3],
+    ]);
   }
 
   dx() {
@@ -65,19 +58,19 @@ export class ImageLayer extends Layer {
     return Math.round(this.imagedata.height / this.height);
   }
 
-  average_color(x: number, y: number) {
+  average_color(x: number, y: number): Color {
     const index = (x: number, y: number) => (y * this.imagedata.width + x) * 4;
     const colors = range(x, x + this.dx(), 1)
       .map((x) =>
         range(y, y + this.dy(), 1).map((y) => this.color(index(x, y)))
       )
       .flat();
-    return {
-      red: Math.round(average(colors, ({ red }) => red)),
-      green: Math.round(average(colors, ({ green }) => green)),
-      blue: Math.round(average(colors, ({ blue }) => blue)),
-      alpha: Math.round(average(colors, ({ alpha }) => alpha)),
-    };
+    return new Uint8ClampedArray([
+      Math.round(average(colors, (color) => color[RED])),
+      Math.round(average(colors, (color) => color[GREEN])),
+      Math.round(average(colors, (color) => color[BLUE])),
+      Math.round(average(colors, (color) => color[ALPHA])),
+    ]);
   }
 
   generate() {
@@ -90,18 +83,18 @@ export class ImageLayer extends Layer {
       .filter((y) =>
         y.every(
           (x) =>
-            !isNaN(x.red) &&
-            !isNaN(x.blue) &&
-            !isNaN(x.green) &&
-            !isNaN(x.alpha)
+            !isNaN(x[RED]) &&
+            !isNaN(x[BLUE]) &&
+            !isNaN(x[GREEN]) &&
+            !isNaN(x[ALPHA])
         )
       );
   }
 
-  public render(): CharacterWithPosition[] {
+  public render(): MovableType[] {
     if (!this.imagedata) return [];
     const generated = this.generate();
-    let result = [];
+    let result: MovableType[] = [];
     for (let y = 0; y < generated.length; y += 2) {
       for (let x = 0; x < generated[y].length; x++) {
         const t = generated[y][x];
@@ -109,28 +102,24 @@ export class ImageLayer extends Layer {
         if (y + 1 < generated.length) {
           const b = generated[y + 1][x];
           if (isTransparent(t) && isTransparent(b)) {
-            result.push({ position, character: new Character(" ") });
+            result.push({ position, character: " " });
           } else if (isTransparent(t)) {
-            result.push({
-              position,
-              character: new Character("▄", b),
-            });
+            result.push({ position, character: "▄", foregroundColor: b });
           } else if (isTransparent(b)) {
-            result.push({
-              position,
-              character: new Character("▀", t),
-            });
+            result.push({ position, character: "▀", foregroundColor: t });
           } else {
             result.push({
               position,
-              character: new Character("▀", t, b),
+              character: "▀",
+              foregroundColor: t,
+              backgroundColor: b,
             });
           }
         } else {
           result.push(
             isTransparent(t)
-              ? { position, character: new Character(" ") }
-              : { position, character: new Character("▀", t) }
+              ? { position, character: " " }
+              : { position, character: "▀", foregroundColor: t }
           );
         }
       }

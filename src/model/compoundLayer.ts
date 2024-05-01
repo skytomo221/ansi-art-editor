@@ -1,7 +1,7 @@
-import { CharacterWithPosition } from "./characterWithPosition";
+import { MovableType } from "./movableType";
 import { Coordinate } from "./coordinate";
 import { Layer } from "./layer";
-import { Character } from "./character";
+import { Type } from "./type";
 
 export class CompoundLayer extends Layer {
   layers: Layer[];
@@ -13,23 +13,23 @@ export class CompoundLayer extends Layer {
     this.name = "Compound Layer";
   }
 
-  public render(): CharacterWithPosition[] {
-    const screen: Map<string, Character> = new Map();
+  public render(): MovableType[] {
+    const screen: Map<string, Type> = new Map();
     this.layers.forEach((layer) => {
-      layer.render().forEach(({ position, character }) => {
+      layer.render().forEach(({ position, ...type }) => {
         screen.set(
           JSON.stringify({
             x: this.position.x + position.x,
             y: this.position.y + position.y,
           }),
-          character
+          type
         );
       });
     });
     return Array.from(screen.entries()).map(
-      ([position, character]): CharacterWithPosition => ({
+      ([position, type]): MovableType => ({
         position: JSON.parse(position),
-        character,
+        ...type,
       })
     );
   }
