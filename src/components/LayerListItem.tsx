@@ -1,22 +1,20 @@
 import React, { FocusEvent } from "react";
 
-import { Button, Card, Collapse, Text } from "@blueprintjs/core";
+import { Button, Card, Collapse } from "@blueprintjs/core";
 import { LayerName } from "./LayerName";
 import {
   useChildrenLayerDispatch,
-  useChildrenLayerStore,
 } from "../contexts/childrenLayerContext";
 import { TextLayerProperty } from "./TextLayerProperty";
 import { ImageLayerProperty } from "./ImageLayerProperty";
+import { Layer } from "../model/layer";
 
 type Props = {
-  index: number;
+  layer: Layer;
 };
 
-export const LayerListItem = ({ index }: Props): JSX.Element => {
-  const store = useChildrenLayerStore();
+export const LayerListItem = ({ layer }: Props): JSX.Element => {
   const dispatch = useChildrenLayerDispatch();
-  const layer = store[index];
   const { id, isOpen, type } = layer;
 
   function setIsOpen(isOpen: boolean) {
@@ -38,9 +36,9 @@ export const LayerListItem = ({ index }: Props): JSX.Element => {
   function property() {
     switch (type) {
       case "text":
-        return <TextLayerProperty index={index} layer={layer} />;
+        return <TextLayerProperty layer={layer} />;
       case "image":
-        return <ImageLayerProperty index={index} layer={layer} />;
+        return <ImageLayerProperty layer={layer} />;
       case "compound":
         return <Card>{layer.name}</Card>;
       default:

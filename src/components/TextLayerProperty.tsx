@@ -5,11 +5,10 @@ import { useChildrenLayerDispatch } from "../contexts/childrenLayerContext";
 import { TextLayer } from "../model/layer";
 
 type Props = {
-  index: number;
   layer: TextLayer;
 };
 
-export const TextLayerProperty = ({ index, layer }: Props): JSX.Element => {
+export const TextLayerProperty = ({ layer }: Props): JSX.Element => {
   const [text, setText] = React.useState(layer.text);
   const [x, setX] = React.useState(layer.offset.x);
   const [y, setY] = React.useState(layer.offset.y);

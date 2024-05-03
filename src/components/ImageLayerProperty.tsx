@@ -5,7 +5,6 @@ import { useChildrenLayerDispatch } from "../contexts/childrenLayerContext";
 import { ImageLayer } from "../model/layer";
 
 type Props = {
-  index: number;
   layer: ImageLayer;
 };
 
@@ -61,7 +60,7 @@ function getImageData(image: HTMLImageElement) {
   }
 }
 
-export const ImageLayerProperty = ({ index, layer }: Props): JSX.Element => {
+export const ImageLayerProperty = ({ layer }: Props): JSX.Element => {
   const [x, setX] = React.useState(layer.offset.x);
   const [y, setY] = React.useState(layer.offset.y);
   const [width, setWidth] = React.useState(layer.width);
