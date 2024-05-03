@@ -1,8 +1,8 @@
 import React from "react";
 
 import { FileInput, FormGroup, NumericInput } from "@blueprintjs/core";
-import { ImageLayer } from "../model/imageLayer";
-import { useLayersDispatch } from "../contexts/layersContext";
+import { useChildrenLayerDispatch } from "../contexts/childrenLayerContext";
+import { ImageLayer } from "../model/layer";
 
 type Props = {
   index: number;
@@ -62,17 +62,18 @@ function getImageData(image: HTMLImageElement) {
 }
 
 export const ImageLayerProperty = ({ index, layer }: Props): JSX.Element => {
-  const [x, setX] = React.useState(layer.position.x);
-  const [y, setY] = React.useState(layer.position.y);
+  const [x, setX] = React.useState(layer.offset.x);
+  const [y, setY] = React.useState(layer.offset.y);
   const [width, setWidth] = React.useState(layer.width);
   const [height, setHeight] = React.useState(layer.height);
-  const dispatch = useLayersDispatch();
+  const { id } = layer;
+  const dispatch = useChildrenLayerDispatch();
 
   function changePosition() {
-    layer.position = { x, y };
+    layer.offset = { x, y };
     dispatch({
       type: "UPDATE_LAYER",
-      index,
+      id,
       layer,
     });
   }
@@ -82,7 +83,7 @@ export const ImageLayerProperty = ({ index, layer }: Props): JSX.Element => {
     layer.height = height;
     dispatch({
       type: "UPDATE_LAYER",
-      index,
+      id,
       layer,
     });
   }
@@ -106,7 +107,7 @@ export const ImageLayerProperty = ({ index, layer }: Props): JSX.Element => {
           layer.height = limitedSize.height;
           dispatch({
             type: "UPDATE_LAYER",
-            index,
+            id,
             layer,
           });
         };

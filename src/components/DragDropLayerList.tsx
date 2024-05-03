@@ -1,5 +1,5 @@
 import React from "react";
-import { useLayersDispatch, useLayersStore } from "../contexts/layersContext";
+import { useChildrenLayerDispatch } from "../contexts/childrenLayerContext";
 import {
   DragDropContext,
   Droppable,
@@ -19,18 +19,18 @@ const getListStyle = (isDraggingOver: boolean) => ({
 });
 
 export const DragDropLayerList = ({ children }: Props): JSX.Element => {
-  const dispatch = useLayersDispatch();
+  const dispatch = useChildrenLayerDispatch();
 
   function onDragEnd(result: DropResult) {
     // dropped outside the list
     if (!result.destination) {
       return;
     }
-    dispatch({
-      type: "SWAP_LAYER",
-      from: result.source.index,
-      to: result.destination.index,
-    });
+    // dispatch({
+    //   type: "SWAP_LAYER",
+    //   from: result.source.index,
+    //   to: result.destination.index,
+    // });
   }
 
   return (

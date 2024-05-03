@@ -1,9 +1,31 @@
-import { MovableType } from "./movableType";
 import { Coordinate } from "./coordinate";
+import { MovableType } from "./movableType";
 
-export abstract class Layer {
+export type LayerBase = {
+  id: number;
+  type: string;
   name: string;
-  position: Coordinate;
+  isOpen: boolean;
+  offset: Coordinate;
+  result: MovableType[];
+};
 
-  public abstract render(): MovableType[];
+export type Layer = TextLayer | ImageLayer | CompoundLayer;
+
+export type TextLayer = LayerBase & {
+  type: "text";
+  text: string;
 }
+
+export type ImageLayer = LayerBase & {
+  type: "image";
+  offset: Coordinate;
+  imagedata: null | ImageData;
+  width: number;
+  height: number;
+};
+
+export type CompoundLayer = LayerBase & {
+  type: "compound";
+  children: number[];
+};

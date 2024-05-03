@@ -1,16 +1,13 @@
 import React from "react";
-import { useLayersStore } from "../contexts/layersContext";
-import { CompoundLayer } from "../model/compoundLayer";
+import { useChildrenLayerStore } from "../contexts/childrenLayerContext";
 import { normalize } from "../model/normalize";
 import { BLUE, GREEN, RED } from "../model/color";
+import { renderCompoundLayer } from "../model/compoundLayer";
 
 export const Screen = (): JSX.Element => {
-  const store = useLayersStore();
-  const { layer } = store[store.length - 1];
-  const compoundLayer = layer as CompoundLayer;
-  const layers = store.slice(0, -1).map((l) => l.layer);
-  compoundLayer.layers = layers;
-  const characters = normalize(layer.render());
+  const layers = useChildrenLayerStore();
+  const offset = { x: 0, y: 0 };
+  const characters = normalize(renderCompoundLayer(offset, layers));
 
   return (
     <div className="app-screen">
@@ -20,6 +17,7 @@ export const Screen = (): JSX.Element => {
           const backgroundColor = c.backgroundColor ?? undefined;
           return (
             <span
+              key={JSON.stringify(c)}
               style={{
                 backgroundColor:
                   backgroundColor === undefined

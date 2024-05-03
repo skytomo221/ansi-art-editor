@@ -1,7 +1,6 @@
 import { MovableType } from "./movableType";
-import { Coordinate } from "./coordinate";
-import { Layer } from "./layer";
 import { ALPHA, BLUE, Color, GREEN, RED } from "./color";
+import { Coordinate } from "./coordinate";
 
 const sum = <T>(
   arr: T[],
@@ -21,49 +20,27 @@ const range = (start: number, stop: number, step: number) =>
 
 const isTransparent = (color: Color) => color[ALPHA] < 0x7f;
 
-export class ImageLayer extends Layer {
-  imagedata: null | ImageData;
-  width: number;
-  height: number;
-
-  constructor(
-    name: string,
-    position: Coordinate,
-    imagedata: null | ImageData,
-    width: number,
-    height: number
-  ) {
-    super();
-    this.position = position;
-    this.name = name;
-    this.imagedata = imagedata;
-    this.width = width;
-    this.height = height;
-  }
-
-  color(index: number): Color {
-    return new Uint8ClampedArray([
-      this.imagedata.data[index],
-      this.imagedata.data[index + 1],
-      this.imagedata.data[index + 2],
-      this.imagedata.data[index + 3],
+export function renderImageLayer(
+  offset: Coordinate,
+  imagedata: null | ImageData,
+  width: number,
+  height: number
+) {
+  const color = (index: number) =>
+    new Uint8ClampedArray([
+      imagedata.data[index],
+      imagedata.data[index + 1],
+      imagedata.data[index + 2],
+      imagedata.data[index + 3],
     ]);
-  }
 
-  dx() {
-    return Math.round(this.imagedata.width / this.width);
-  }
+  const dx = () => Math.round(imagedata.width / width);
+  const dy = () => Math.round(imagedata.height / height);
 
-  dy() {
-    return Math.round(this.imagedata.height / this.height);
-  }
-
-  average_color(x: number, y: number): Color {
-    const index = (x: number, y: number) => (y * this.imagedata.width + x) * 4;
-    const colors = range(x, x + this.dx(), 1)
-      .map((x) =>
-        range(y, y + this.dy(), 1).map((y) => this.color(index(x, y)))
-      )
+  const average_color = (x: number, y: number) => {
+    const index = (x: number, y: number) => (y * imagedata.width + x) * 4;
+    const colors = range(x, x + dx(), 1)
+      .map((x) => range(y, y + dy(), 1).map((y) => color(index(x, y))))
       .flat();
     return new Uint8ClampedArray([
       Math.round(average(colors, (color) => color[RED])),
@@ -71,14 +48,12 @@ export class ImageLayer extends Layer {
       Math.round(average(colors, (color) => color[BLUE])),
       Math.round(average(colors, (color) => color[ALPHA])),
     ]);
-  }
+  };
 
-  generate() {
-    return range(0, this.imagedata.height, this.dy())
+  const generate = () =>
+    range(0, imagedata.height, dy())
       .map((y) =>
-        range(0, this.imagedata.width, this.dx()).map((x) =>
-          this.average_color(x, y)
-        )
+        range(0, imagedata.width, dx()).map((x) => average_color(x, y))
       )
       .filter((y) =>
         y.every(
@@ -89,41 +64,38 @@ export class ImageLayer extends Layer {
             !isNaN(x[ALPHA])
         )
       );
-  }
 
-  public render(): MovableType[] {
-    if (!this.imagedata) return [];
-    const generated = this.generate();
-    let result: MovableType[] = [];
-    for (let y = 0; y < generated.length; y += 2) {
-      for (let x = 0; x < generated[y].length; x++) {
-        const t = generated[y][x];
-        const position = { x: this.position.x + x, y: this.position.y + y / 2 };
-        if (y + 1 < generated.length) {
-          const b = generated[y + 1][x];
-          if (isTransparent(t) && isTransparent(b)) {
-            result.push({ position, character: " " });
-          } else if (isTransparent(t)) {
-            result.push({ position, character: "▄", foregroundColor: b });
-          } else if (isTransparent(b)) {
-            result.push({ position, character: "▀", foregroundColor: t });
-          } else {
-            result.push({
-              position,
-              character: "▀",
-              foregroundColor: t,
-              backgroundColor: b,
-            });
-          }
+  if (!imagedata) return [];
+  const generated = generate();
+  let result: MovableType[] = [];
+  for (let y = 0; y < generated.length; y += 2) {
+    for (let x = 0; x < generated[y].length; x++) {
+      const t = generated[y][x];
+      const position = { x: offset.x + x, y: offset.y + y / 2 };
+      if (y + 1 < generated.length) {
+        const b = generated[y + 1][x];
+        if (isTransparent(t) && isTransparent(b)) {
+          result.push({ position, character: " " });
+        } else if (isTransparent(t)) {
+          result.push({ position, character: "▄", foregroundColor: b });
+        } else if (isTransparent(b)) {
+          result.push({ position, character: "▀", foregroundColor: t });
         } else {
-          result.push(
-            isTransparent(t)
-              ? { position, character: " " }
-              : { position, character: "▀", foregroundColor: t }
-          );
+          result.push({
+            position,
+            character: "▀",
+            foregroundColor: t,
+            backgroundColor: b,
+          });
         }
+      } else {
+        result.push(
+          isTransparent(t)
+            ? { position, character: " " }
+            : { position, character: "▀", foregroundColor: t }
+        );
       }
     }
-    return result;
   }
+  return result;
 }

@@ -1,23 +1,35 @@
 import React from "react";
-import { useLayersDispatch } from "../contexts/layersContext";
+import { useChildrenLayerDispatch } from "../contexts/childrenLayerContext";
 import { Button, ButtonGroup } from "@blueprintjs/core";
-import { TextLayer } from "../model/textLayer";
-import { ImageLayer } from "../model/imageLayer";
 
 export const AddLayer = (): JSX.Element => {
-  const dispatch = useLayersDispatch();
+  const dispatch = useChildrenLayerDispatch();
 
   function addTextLayer() {
     dispatch({
-      type: "ADD_LAYER",
-      layer: new TextLayer("Text Layer", { x: 0, y: 0 }, ""),
+      type: "ADD_TEXT_LAYER",
+      layer: {
+        type: "text",
+        isOpen: false,
+        name: "Text Layer",
+        offset: { x: 0, y: 0 },
+        text: "",
+      },
     });
   }
 
   function addImageLayer() {
     dispatch({
-      type: "ADD_LAYER",
-      layer: new ImageLayer("Image Layer", { x: 0, y: 0 }, null, 0, 0),
+      type: "ADD_IMAGE_LAYER",
+      layer: {
+        type: "image",
+        isOpen: false,
+        name: "Image Layer",
+        offset: { x: 0, y: 0 },
+        width: 0,
+        height: 0,
+        imagedata: undefined
+      },
     });
   }
 

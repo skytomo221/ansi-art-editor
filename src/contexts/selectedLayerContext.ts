@@ -1,4 +1,4 @@
-import makeStore from "./makeStore";
+import makeStore from "./makeContext";
 
 type State = number;
 

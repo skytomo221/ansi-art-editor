@@ -1,36 +1,25 @@
 import { MovableType } from "./movableType";
-import { Coordinate } from "./coordinate";
-import { Layer } from "./layer";
+import { LayerBase } from "./layer";
 import { Type } from "./type";
+import { Coordinate } from "./coordinate";
 
-export class CompoundLayer extends Layer {
-  layers: Layer[];
-
-  constructor(position: Coordinate, layers: Layer[]) {
-    super();
-    this.position = position;
-    this.layers = layers;
-    this.name = "Compound Layer";
-  }
-
-  public render(): MovableType[] {
-    const screen: Map<string, Type> = new Map();
-    this.layers.forEach((layer) => {
-      layer.render().forEach(({ position, ...type }) => {
-        screen.set(
-          JSON.stringify({
-            x: this.position.x + position.x,
-            y: this.position.y + position.y,
-          }),
-          type
-        );
-      });
+export function renderCompoundLayer(offset: Coordinate, layers: LayerBase[]) {
+  const screen: Map<string, Type> = new Map();
+  layers.forEach((layer) => {
+    layer.result.forEach(({ position, ...type }) => {
+      screen.set(
+        JSON.stringify({
+          x: offset.x + position.x,
+          y: offset.y + position.y,
+        }),
+        type
+      );
     });
-    return Array.from(screen.entries()).map(
-      ([position, type]): MovableType => ({
-        position: JSON.parse(position),
-        ...type,
-      })
-    );
-  }
+  });
+  return Array.from(screen.entries()).map(
+    ([position, type]): MovableType => ({
+      position: JSON.parse(position),
+      ...type,
+    })
+  );
 }

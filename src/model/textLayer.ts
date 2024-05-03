@@ -1,7 +1,6 @@
-import { Type } from "./type";
 import { MovableType } from "./movableType";
+import { LayerBase } from "./layer";
 import { Coordinate } from "./coordinate";
-import { Layer } from "./layer";
 
 const fixNewLinesPosition = (characters: MovableType[]): MovableType[] =>
   characters.reduce((acc, character, i) => {
@@ -21,28 +20,15 @@ const fixNewLinesPosition = (characters: MovableType[]): MovableType[] =>
     ];
   }, [] as MovableType[]);
 
-export class TextLayer extends Layer {
-  text: string;
-
-  constructor(name: string, position: Coordinate, text: string) {
-    super();
-    this.position = position;
-    this.name = name;
-    this.text = text;
-  }
-
-  public render(): MovableType[] {
-    const characters = this.text
-      .split("")
-      .map((character, index): MovableType => {
-        return {
-          position: {
-            x: this.position.x + index,
-            y: this.position.y,
-          },
-          character,
-        };
-      });
-    return fixNewLinesPosition(characters);
-  }
+export function renderTextLayer(offset: Coordinate, text: string) {
+  const characters = text.split("").map(
+    (character, index): MovableType => ({
+      position: {
+        x: offset.x + index,
+        y: offset.y,
+      },
+      character,
+    })
+  );
+  return fixNewLinesPosition(characters);
 }

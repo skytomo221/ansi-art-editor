@@ -1,8 +1,8 @@
 import React, { FocusEvent } from "react";
 
 import { FormGroup, NumericInput, TextArea } from "@blueprintjs/core";
-import { TextLayer } from "../model/textLayer";
-import { useLayersDispatch } from "../contexts/layersContext";
+import { useChildrenLayerDispatch } from "../contexts/childrenLayerContext";
+import { TextLayer } from "../model/layer";
 
 type Props = {
   index: number;
@@ -11,24 +11,25 @@ type Props = {
 
 export const TextLayerProperty = ({ index, layer }: Props): JSX.Element => {
   const [text, setText] = React.useState(layer.text);
-  const [x, setX] = React.useState(layer.position.x);
-  const [y, setY] = React.useState(layer.position.y);
-  const dispatch = useLayersDispatch();
+  const [x, setX] = React.useState(layer.offset.x);
+  const [y, setY] = React.useState(layer.offset.y);
+  const { id } = layer;
+  const dispatch = useChildrenLayerDispatch();
 
   function changeText() {
     layer.text = text;
     dispatch({
       type: "UPDATE_LAYER",
-      index,
+      id,
       layer,
     });
   }
 
   function changePosition() {
-    layer.position = { x, y };
+    layer.offset = { x, y };
     dispatch({
       type: "UPDATE_LAYER",
-      index,
+      id,
       layer,
     });
   }
