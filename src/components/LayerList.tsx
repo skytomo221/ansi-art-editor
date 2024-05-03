@@ -13,11 +13,8 @@ export const LayerList = (): JSX.Element => {
     <div className="app-layer-list">
       <DragDropLayerList>
         <AddLayer />
-        {layers.slice(0, -1).map((layer, index) => (
-          <LayerListItem
-            key={JSON.stringify({ index, layer })}
-            index={index}
-          />
+        {layers.slice(0, -1).map(({ id }, index) => (
+          <LayerListItem key={id} index={index} />
         ))}
         <div className="flex">
           <DoubleChevronDown className="center" />
