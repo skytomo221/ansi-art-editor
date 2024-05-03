@@ -13,7 +13,7 @@ export const LayerList = (): JSX.Element => {
     <div className="app-layer-list">
       <DragDropLayerList>
         <AddLayer />
-        {layers.slice(0, -1).map((layer) => (
+        {layers.map((layer) => (
           <LayerListItem key={layer.id} layer={layer} />
         ))}
         <div className="flex">
