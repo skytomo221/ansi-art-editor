@@ -126,6 +126,7 @@ export const ImageLayerProperty = ({ layer }: Props): JSX.Element => {
               setX(n);
             }}
             onBlur={changePosition}
+            fill={true}
           />
         </FormGroup>
         <FormGroup label="Y">
@@ -135,6 +136,7 @@ export const ImageLayerProperty = ({ layer }: Props): JSX.Element => {
               setY(n);
             }}
             onBlur={changePosition}
+            fill={true}
           />
         </FormGroup>
       </FormGroup>
@@ -146,6 +148,7 @@ export const ImageLayerProperty = ({ layer }: Props): JSX.Element => {
               setWidth(n);
             }}
             onBlur={changeSize}
+            fill={true}
           />
         </FormGroup>
         <FormGroup label="Height">
@@ -155,11 +158,16 @@ export const ImageLayerProperty = ({ layer }: Props): JSX.Element => {
               setHeight(n);
             }}
             onBlur={changeSize}
+            fill={true}
           />
         </FormGroup>
       </FormGroup>
       <FormGroup label="Image">
-        <FileInput text="Choose file..." onInputChange={onInputChange} />
+        <FileInput
+          text="Choose file..."
+          onInputChange={onInputChange}
+          fill={true}
+        />
       </FormGroup>
     </div>
   );

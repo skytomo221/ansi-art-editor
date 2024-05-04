@@ -43,6 +43,7 @@ export const TextLayerProperty = ({ layer }: Props): JSX.Element => {
               setX(n);
             }}
             onBlur={changePosition}
+            fill={true}
           />
         </FormGroup>
         <FormGroup label="Y">
@@ -52,6 +53,7 @@ export const TextLayerProperty = ({ layer }: Props): JSX.Element => {
               setY(n);
             }}
             onBlur={changePosition}
+            fill={true}
           />
         </FormGroup>
       </FormGroup>
@@ -62,8 +64,9 @@ export const TextLayerProperty = ({ layer }: Props): JSX.Element => {
             setText(e.target.value);
           }}
           onBlur={changeText}
+          fill={true}
         ></TextArea>
-      </FormGroup>{" "}
+      </FormGroup>
     </div>
   );
 };

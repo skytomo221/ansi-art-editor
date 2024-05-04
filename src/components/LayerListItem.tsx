@@ -25,11 +25,11 @@ export const LayerListItem = ({ layer }: Props): JSX.Element => {
   }
 
   function changeLayerName(e: FocusEvent<HTMLInputElement>) {
-    layer.name = e.target.value;
+    const name = e.target.value;
     dispatch({
-      type: "UPDATE_LAYER",
+      type: "RENAME_LAYER",
       id,
-      layer,
+      name,
     });
   }
 
@@ -47,7 +47,7 @@ export const LayerListItem = ({ layer }: Props): JSX.Element => {
   }
 
   return (
-    <Card>
+    <Card style={{ }}>
       <div style={{ display: "flex" }}>
         <LayerName name={layer.name} onBlur={changeLayerName} />
         <Button

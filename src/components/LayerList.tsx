@@ -4,7 +4,6 @@ import { useChildrenLayerStore } from "../contexts/childrenLayerContext";
 import { Card } from "@blueprintjs/core";
 import { AddLayer } from "./AddLayer";
 import { LayerListItem } from "./LayerListItem";
-import { DoubleChevronDown } from "@blueprintjs/icons";
 
 export const LayerList = (): JSX.Element => {
   const layers = useChildrenLayerStore();
@@ -13,16 +12,12 @@ export const LayerList = (): JSX.Element => {
     <div className="app-layer-list">
       <DragDropLayerList>
         <AddLayer />
-        {layers.map((layer) => (
-          <LayerListItem key={layer.id} layer={layer} />
-        ))}
-        <div className="flex">
-          <DoubleChevronDown className="center" />
-        </div>
-        <Card>
+        <Card className="root-layer">
           <strong>結果レイヤー</strong>
           <br />
-          layers.slice(-1)[0].constructor.name
+          {layers.map((layer) => (
+            <LayerListItem key={layer.id} layer={layer} />
+          ))}
         </Card>
       </DragDropLayerList>
     </div>

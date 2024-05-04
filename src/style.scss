@@ -26,6 +26,7 @@
 .app-layer-list {
   display: block;
   overflow: auto;
+  min-width: 320px;
 }
 
 .app-layer-name {
@@ -41,6 +42,10 @@
   border: none;
   appearance: none;
   font-weight: bold;
+}
+
+.root-layer {
+  width: 300px;
 }
 
 .flex {
