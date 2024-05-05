@@ -3,21 +3,23 @@ import makeStore from "./makeContext";
 import { renderTextLayer } from "../model/textLayer";
 import { renderImageLayer } from "../model/imageLayer";
 import { renderCompoundLayer } from "../model/compoundLayer";
+import { DraggableLocation } from "@hello-pangea/dnd";
+import { Combine } from "react-beautiful-dnd";
 
 type State = Layer[];
 
 type Action =
   | {
       type: "ADD_TEXT_LAYER";
-      layer: Omit<TextLayer, "id" | "result">;
+      layer: Omit<TextLayer, "id" | "result" | "order">;
     }
   | {
       type: "ADD_IMAGE_LAYER";
-      layer: Omit<ImageLayer, "id" | "result">;
+      layer: Omit<ImageLayer, "id" | "result" | "order">;
     }
   | {
       type: "ADD_COMPOUND_LAYER";
-      layer: Omit<CompoundLayer, "id" | "result">;
+      layer: Omit<CompoundLayer, "id" | "result" | "order">;
     }
   | {
       type: "REMOVE_LAYER";
@@ -40,6 +42,13 @@ type Action =
       type: "UPDATE_LAYER";
       id: number;
       layer: Layer;
+    }
+  | {
+      type: "MOVE_LAYER";
+      source: DraggableLocation;
+      destination: DraggableLocation;
+      draggableId: string;
+      combine: Combine;
     };
 
 const initialState: State = [];
@@ -52,6 +61,7 @@ const reducer = (state: State, action: Action): State => {
         {
           ...action.layer,
           id: state.reduce((max, layer) => Math.max(max, layer.id), 0) + 1,
+          order: state.filter((layer) => layer.parent === 0).length,
           result: renderTextLayer(action.layer.offset, action.layer.text),
         },
       ];
@@ -61,6 +71,7 @@ const reducer = (state: State, action: Action): State => {
         {
           ...action.layer,
           id: state.reduce((max, layer) => Math.max(max, layer.id), 0) + 1,
+          order: state.filter((layer) => layer.parent === 0).length,
           result: renderImageLayer(
             action.layer.offset,
             action.layer.imagedata,
@@ -75,12 +86,8 @@ const reducer = (state: State, action: Action): State => {
         {
           ...action.layer,
           id: state.reduce((max, layer) => Math.max(max, layer.id), 0) + 1,
-          result: renderCompoundLayer(
-            action.layer.offset,
-            action.layer.children.map(
-              (id) => state.find((layer) => layer.id === id)!
-            )
-          ),
+          order: state.filter((layer) => layer.parent === 0).length,
+          result: [],
         },
       ];
     case "REMOVE_LAYER":
@@ -111,13 +118,86 @@ const reducer = (state: State, action: Action): State => {
       } else if (layer.type === "compound") {
         layer.result = renderCompoundLayer(
           layer.offset,
-          layer.children.map((id) => state.find((layer) => layer.id === id)!)
+          state.filter((layer) => layer.parent === layer.id)
         );
         return [...state, layer];
       }
       return state.map((layer) =>
         layer.id === action.id ? action.layer : layer
       );
+    }
+    case "MOVE_LAYER": {
+      const { source, destination, draggableId, combine } = action;
+      const layer = state.find((layer) => layer.id.toString() === draggableId);
+      if (!layer) {
+        return state;
+      }
+      if (combine) {
+        if (
+          state.find((layer) => layer.id.toString() === combine.draggableId)
+            .type !== "compound"
+        ) {
+          return state;
+        }
+        const sourceCompoundLayerList = state
+          .filter((layer) => layer.parent.toString() === source.droppableId)
+          .sort((a, b) => a.order - b.order)
+          .toSpliced(source.index, 1)
+          .map((layer, index): Layer => ({ ...layer, order: index }));
+        const destinationCompoundLayerList = state
+          .filter((layer) => layer.parent.toString() === combine.draggableId)
+          .sort((a, b) => a.order - b.order)
+          .toSpliced(-1, 0, { ...layer, parent: Number(combine.draggableId) })
+          .map((layer, index): Layer => ({ ...layer, order: index }));
+        const reminder = state.filter(
+          (layer) =>
+            layer.parent.toString() !== source.droppableId &&
+            layer.parent.toString() !== combine.draggableId
+        );
+        return [
+          ...sourceCompoundLayerList,
+          ...destinationCompoundLayerList,
+          ...reminder,
+        ];
+      } else if (source.droppableId === destination.droppableId) {
+        const compoundLayerList = state
+          .filter((layer) => layer.parent.toString() === source.droppableId)
+          .sort((a, b) => a.order - b.order)
+          .toSpliced(source.index, 1)
+          .toSpliced(destination.index, 0, layer)
+          .map((layer, index): Layer => ({ ...layer, order: index }));
+        const reminder = state.filter(
+          (layer) => layer.parent.toString() !== source.droppableId
+        );
+        return [...compoundLayerList, ...reminder];
+      } else {
+        console.log(action)
+        const sourceCompoundLayerList = state
+          .filter((layer) => layer.parent.toString() === source.droppableId)
+          .sort((a, b) => a.order - b.order)
+          .toSpliced(source.index, 1)
+          .map((layer, index): Layer => ({ ...layer, order: index }));
+        const destinationCompoundLayerList = state
+          .filter(
+            (layer) => layer.parent.toString() === destination.droppableId
+          )
+          .sort((a, b) => a.order - b.order)
+          .toSpliced(destination.index, 0, {
+            ...layer,
+            parent: Number(destination.droppableId),
+          })
+          .map((layer, index): Layer => ({ ...layer, order: index }));
+        const reminder = sourceCompoundLayerList.filter(
+          (layer) =>
+            layer.parent.toString() !== source.droppableId &&
+            layer.parent.toString() !== destination.droppableId
+        );
+        return [
+          ...sourceCompoundLayerList,
+          ...destinationCompoundLayerList,
+          ...reminder,
+        ];
+      }
     }
   }
 };

@@ -1,53 +1,26 @@
 import React from "react";
 import { useChildrenLayerDispatch } from "../contexts/childrenLayerContext";
-import {
-  DragDropContext,
-  Droppable,
-  DropResult,
-} from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 
 type Props = {
   children: React.ReactNode;
 };
 
-const grid = 8;
-
-const getListStyle = (isDraggingOver: boolean) => ({
-  // background: isDraggingOver ? "lightblue" : "lightgrey",
-  padding: grid,
-  width: 250,
-});
-
 export const DragDropLayerList = ({ children }: Props): JSX.Element => {
   const dispatch = useChildrenLayerDispatch();
 
   function onDragEnd(result: DropResult) {
-    // dropped outside the list
-    if (!result.destination) {
+    if (!result.destination && !result.combine) {
       return;
     }
-    // dispatch({
-    //   type: "SWAP_LAYER",
-    //   from: result.source.index,
-    //   to: result.destination.index,
-    // });
+    dispatch({
+      type: "MOVE_LAYER",
+      source: result.source,
+      destination: result.destination,
+      draggableId: result.draggableId,
+      combine: result.combine,
+    });
   }
 
-  return (
-    <div>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="droppable">
-          {(provided, snapshot) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              style={getListStyle(snapshot.isDraggingOver)}
-            >
-              {children}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </div>
-  );
+  return <DragDropContext onDragEnd={onDragEnd}>{children}</DragDropContext>;
 };

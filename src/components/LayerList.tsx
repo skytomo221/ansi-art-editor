@@ -4,6 +4,7 @@ import { useChildrenLayerStore } from "../contexts/childrenLayerContext";
 import { Card } from "@blueprintjs/core";
 import { AddLayer } from "./AddLayer";
 import { LayerListItem } from "./LayerListItem";
+import { DroppableLayerList } from "./DroppableLayerList";
 
 export const LayerList = (): JSX.Element => {
   const layers = useChildrenLayerStore();
@@ -15,9 +16,13 @@ export const LayerList = (): JSX.Element => {
         <Card className="root-layer">
           <strong>結果レイヤー</strong>
           <br />
-          {layers.map((layer) => (
-            <LayerListItem key={layer.id} layer={layer} />
-          ))}
+          <DroppableLayerList compoundLayerId={0}>
+            {layers
+              .filter((layer) => layer.parent === 0)
+              .map((layer, index) => (
+                <LayerListItem key={layer.id} layer={layer} index={index} />
+              ))}
+          </DroppableLayerList>
         </Card>
       </DragDropLayerList>
     </div>

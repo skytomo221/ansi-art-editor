@@ -13,6 +13,7 @@ export const AddLayer = (): JSX.Element => {
         isOpen: false,
         name: "Text Layer",
         offset: { x: 0, y: 0 },
+        parent: 0,
         text: "",
       },
     });
@@ -26,9 +27,23 @@ export const AddLayer = (): JSX.Element => {
         isOpen: false,
         name: "Image Layer",
         offset: { x: 0, y: 0 },
+        parent: 0,
         width: 0,
         height: 0,
-        imagedata: undefined
+        imagedata: undefined,
+      },
+    });
+  }
+
+  function addCompoundLayer() {
+    dispatch({
+      type: "ADD_COMPOUND_LAYER",
+      layer: {
+        type: "compound",
+        isOpen: false,
+        name: "Compound Layer",
+        offset: { x: 0, y: 0 },
+        parent: 0,
       },
     });
   }
@@ -38,6 +53,7 @@ export const AddLayer = (): JSX.Element => {
       <Button text="Text" icon="new-text-box" onClick={addTextLayer} />
       <Button text="Paint" icon="style" />
       <Button text="Image" icon="media" onClick={addImageLayer} />
+      <Button text="Compound" icon="new-layer" onClick={addCompoundLayer} />
     </ButtonGroup>
   );
 };

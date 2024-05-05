@@ -7,6 +7,8 @@ export type LayerBase = {
   name: string;
   isOpen: boolean;
   offset: Coordinate;
+  parent: number;
+  order: number;
   result: MovableType[];
 };
 
@@ -27,5 +29,4 @@ export type ImageLayer = LayerBase & {
 
 export type CompoundLayer = LayerBase & {
   type: "compound";
-  children: number[];
 };
