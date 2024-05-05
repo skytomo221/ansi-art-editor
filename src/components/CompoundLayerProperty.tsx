@@ -1,9 +1,12 @@
 import React from "react";
 
-import { useChildrenLayerStore } from "../contexts/childrenLayerContext";
+import {
+  useChildrenLayerDispatch,
+  useChildrenLayerStore,
+} from "../contexts/childrenLayerContext";
 import { CompoundLayer } from "../model/layer";
 import { LayerListItem } from "./LayerListItem";
-import { DroppableLayerList } from "./DroppableLayerList";
+import { SortableLayers } from "./SortableLayers";
 
 type Props = {
   layer: CompoundLayer;
@@ -15,12 +18,11 @@ export const CompoundLayerProperty = ({ layer }: Props): JSX.Element => {
 
   return (
     <div>
-      <DroppableLayerList compoundLayerId={layer.id}>
-        <div>ここにドロップできるはずです</div>
+      <SortableLayers parent={layer.id} empty={children.length === 0}>
         {children.map((layer, index) => (
           <LayerListItem key={layer.id} layer={layer} index={index} />
         ))}
-      </DroppableLayerList>
+      </SortableLayers>
     </div>
   );
 };

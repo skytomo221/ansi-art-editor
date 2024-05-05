@@ -8,7 +8,6 @@ export type LayerBase = {
   isOpen: boolean;
   offset: Coordinate;
   parent: number;
-  order: number;
   result: MovableType[];
 };
 

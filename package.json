@@ -20,6 +20,7 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",
+    "@types/sortablejs": "^1.15.8",
     "@typescript-eslint/eslint-plugin": "file:latest eslint-plugin-react@latest @typescript-eslint/parser@latest",
     "@webpack-cli/generators": "^3.0.7",
     "css-loader": "^6.10.0",
@@ -44,10 +45,10 @@
     "@blueprintjs/core": "^5.10.2",
     "@blueprintjs/icons": "^5.9.0",
     "@blueprintjs/select": "^5.1.4",
-    "@hello-pangea/dnd": "^16.6.0",
-    "@types/react-beautiful-dnd": "^13.1.8",
     "eastasianwidth": "^0.2.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-sortablejs": "^6.1.4",
+    "sortablejs": "^1.15.2"
   }
 }

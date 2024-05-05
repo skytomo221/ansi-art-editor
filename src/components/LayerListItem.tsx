@@ -7,8 +7,6 @@ import { TextLayerProperty } from "./TextLayerProperty";
 import { ImageLayerProperty } from "./ImageLayerProperty";
 import { Layer } from "../model/layer";
 import { CompoundLayerProperty } from "./CompoundLayerProperty";
-import { Draggable } from "@hello-pangea/dnd";
-import { DraggableLayerListItem } from "./DraggableLayerListItem";
 
 type Props = {
   layer: Layer;
@@ -49,20 +47,18 @@ export const LayerListItem = ({ layer, index }: Props): JSX.Element => {
   }
 
   return (
-    <DraggableLayerListItem layerId={id} index={index}>
-      <Card>
-        <div style={{ display: "flex" }}>
-          <LayerName name={layer.name} onBlur={changeLayerName} />
-          <Button
-            className="app-layer-collapse"
-            onClick={() => {
-              setIsOpen(!isOpen);
-            }}
-            icon={"settings"}
-          ></Button>
-        </div>
-        <Collapse isOpen={isOpen}>{property()}</Collapse>
-      </Card>
-    </DraggableLayerListItem>
+    <Card>
+      <div style={{ display: "flex" }}>
+        <LayerName name={layer.name} onBlur={changeLayerName} />
+        <Button
+          className="app-layer-collapse"
+          onClick={() => {
+            setIsOpen(!isOpen);
+          }}
+          icon={"settings"}
+        ></Button>
+      </div>
+      <Collapse isOpen={isOpen}>{property()}</Collapse>
+    </Card>
   );
 };
