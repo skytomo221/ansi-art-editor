@@ -1,6 +1,10 @@
 @import "@blueprintjs/core/lib/scss/variables";
 @import "@blueprintjs/select/lib/css/blueprint-select.css";
 
+h2 {
+  margin: 0.5em 0;
+}
+
 .app-root {
   display: flex;
   height: 100vh;
