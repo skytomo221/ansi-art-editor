@@ -3,6 +3,7 @@ import React from "react";
 import { FileInput, FormGroup, NumericInput } from "@blueprintjs/core";
 import { useChildrenLayerDispatch } from "../contexts/childrenLayerContext";
 import { ImageLayer } from "../model/layer";
+import DeleteLayer from "./DeleteLayer";
 
 type Props = {
   layer: ImageLayer;
@@ -169,6 +170,7 @@ export const ImageLayerProperty = ({ layer }: Props): JSX.Element => {
           fill={true}
         />
       </FormGroup>
+      <DeleteLayer layerId={layer.id} />
     </div>
   );
 };

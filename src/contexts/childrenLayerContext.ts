@@ -20,7 +20,7 @@ type Action =
       layer: Omit<CompoundLayer, "id" | "result" | "order">;
     }
   | {
-      type: "REMOVE_LAYER";
+      type: "DELETE_LAYER";
       id: number;
     }
   | {
@@ -83,7 +83,7 @@ const reducer = (state: State, action: Action): State => {
           result: [],
         },
       ];
-    case "REMOVE_LAYER":
+    case "DELETE_LAYER":
       return state.filter((layer) => layer.id !== action.id);
     case "OPEN_LAYER":
       return state.map((layer) =>

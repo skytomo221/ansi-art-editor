@@ -3,6 +3,7 @@ import React, { FocusEvent } from "react";
 import { FormGroup, NumericInput, TextArea } from "@blueprintjs/core";
 import { useChildrenLayerDispatch } from "../contexts/childrenLayerContext";
 import { TextLayer } from "../model/layer";
+import DeleteLayer from "./DeleteLayer";
 
 type Props = {
   layer: TextLayer;
@@ -67,6 +68,7 @@ export const TextLayerProperty = ({ layer }: Props): JSX.Element => {
           fill={true}
         ></TextArea>
       </FormGroup>
+      <DeleteLayer layerId={layer.id} />
     </div>
   );
 };

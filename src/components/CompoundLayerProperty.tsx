@@ -1,12 +1,10 @@
 import React from "react";
 
-import {
-  useChildrenLayerDispatch,
-  useChildrenLayerStore,
-} from "../contexts/childrenLayerContext";
+import { useChildrenLayerStore } from "../contexts/childrenLayerContext";
 import { CompoundLayer } from "../model/layer";
 import { LayerListItem } from "./LayerListItem";
 import { SortableLayers } from "./SortableLayers";
+import DeleteLayer from "./DeleteLayer";
 
 type Props = {
   layer: CompoundLayer;
@@ -23,6 +21,7 @@ export const CompoundLayerProperty = ({ layer }: Props): JSX.Element => {
           <LayerListItem key={layer.id} layer={layer} index={index} />
         ))}
       </SortableLayers>
+      <DeleteLayer layerId={layer.id} />
     </div>
   );
 };
