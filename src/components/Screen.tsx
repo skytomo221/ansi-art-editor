@@ -5,7 +5,7 @@ import { BLUE, GREEN, RED } from "../model/color";
 import { renderCompoundLayer } from "../model/compoundLayer";
 
 export const Screen = (): JSX.Element => {
-  const layers = useChildrenLayerStore();
+  const layers = useChildrenLayerStore().filter((l) => l.parent === 0);
   const offset = { x: 0, y: 0 };
   const characters = normalize(renderCompoundLayer(offset, layers));
 
