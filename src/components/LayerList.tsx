@@ -1,9 +1,10 @@
 import React from "react";
 import { useChildrenLayerStore } from "../contexts/childrenLayerContext";
-import { Card } from "@blueprintjs/core";
+import { Button, Card } from "@blueprintjs/core";
 import { AddLayer } from "./AddLayer";
 import { LayerListItem } from "./LayerListItem";
 import { SortableLayers } from "./SortableLayers";
+import Clipboard from "./Clipboard";
 
 export const LayerList = (): JSX.Element => {
   const store = useChildrenLayerStore();
@@ -13,8 +14,8 @@ export const LayerList = (): JSX.Element => {
     <div className="app-layer-list">
       <AddLayer />
       <Card className="root-layer">
-        <strong>結果レイヤー</strong>
-        <br />
+        <h2>結果レイヤー</h2>
+        <Clipboard />
         <SortableLayers parent={0}>
           {children.map((layer, index) => (
             <LayerListItem key={layer.id} layer={layer} index={index} />
