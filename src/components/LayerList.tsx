@@ -7,7 +7,7 @@ import { SortableLayers } from "./SortableLayers";
 
 export const LayerList = (): JSX.Element => {
   const store = useChildrenLayerStore();
-  const children = store.filter((l) => l.parent === 0);
+  const children = store.filter((l) => l.parent === 0).reverse();
 
   return (
     <div className="app-layer-list">

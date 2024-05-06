@@ -12,7 +12,7 @@ type Props = {
 
 export const CompoundLayerProperty = ({ layer }: Props): JSX.Element => {
   const store = useChildrenLayerStore();
-  const children = store.filter((l) => l.parent === layer.id);
+  const children = store.filter((l) => l.parent === layer.id).reverse();
 
   return (
     <div>
