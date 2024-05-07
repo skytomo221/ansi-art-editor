@@ -26,7 +26,7 @@ const Clipboard = (): JSX.Element => {
     const text = characters
       .map(
         ({ foregroundColor, backgroundColor, character }) =>
-          `${toAnsi24bitColor("foreground", foregroundColor)}${toAnsi24bitColor("background", backgroundColor)}${character}\x1b[9m`
+          `${toAnsi24bitColor("foreground", foregroundColor)}${toAnsi24bitColor("background", backgroundColor)}${character}\x1b[m`
       )
       .join("");
     copyToClipboard(text);
