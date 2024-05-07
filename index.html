@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>ANSI Art Editor</title>
+    <script defer src="main.js"></script><meta name="theme-color" content="#FF0000" /><link rel="manifest" href="./manifest.f1ba4ce7c8bce0ec16723d7f10782566.json" /></head>
+    <body>
+        <div id="root"></div>
+    </body>
+    
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker
+                    .register("service-worker.js")
+                    .then((registration) => {
+                        console.log("Service Worker registered: ", registration);
+                    })
+                    .catch((registrationError) => {
+                        console.error("Service Worker registration failed: ", registrationError);
+                    });
+            });
+        }
+    </script>
+</html>

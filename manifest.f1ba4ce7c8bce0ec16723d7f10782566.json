@@ -1,0 +1,41 @@
+{
+  "icons": [
+    {
+      "src": "./icon_512x512.3f9dda5bc6422b21308e962de4885517.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon_384x384.7aa59138653b95f138296147a38be3f4.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon_256x256.2e2dc37e3430a437f50eb32de10e95bc.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon_192x192.f431b0a367fb7ae929b7352f9a9e2ae2.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon_128x128.32d4ce724161e8aff7d87dc2ede16af2.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon_96x96.68c1f104dcf199b150b661cf9a6b02e5.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    }
+  ],
+  "name": "ANSI Art Editor",
+  "short_name": "AAEditor",
+  "orientation": "portrait",
+  "display": "standalone",
+  "start_url": "index.html",
+  "background_color": "#202124",
+  "theme_color": "#FF0000"
+}
