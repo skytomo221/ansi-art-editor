@@ -45,6 +45,8 @@
     "@blueprintjs/core": "^5.10.2",
     "@blueprintjs/icons": "^5.9.0",
     "@blueprintjs/select": "^5.1.4",
+    "@types/color-diff": "^1.2.5",
+    "color-diff": "^1.4.0",
     "eastasianwidth": "^0.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -3,11 +3,17 @@ import { useChildrenLayerStore } from "../contexts/childrenLayerContext";
 import { normalize } from "../model/normalize";
 import { BLUE, GREEN, RED } from "../model/color";
 import { renderCompoundLayer } from "../model/compoundLayer";
+import { useRootLayerStore } from "../contexts/rootLayerContext";
+import { convertBit } from "../model/movableType";
 
 export const Screen = (): JSX.Element => {
+  const { colorMode } = useRootLayerStore();
   const layers = useChildrenLayerStore().filter((l) => l.parent === 0);
   const offset = { x: 0, y: 0 };
-  const characters = normalize(renderCompoundLayer(offset, layers));
+  const characters = convertBit(
+    normalize(renderCompoundLayer(offset, layers)),
+    colorMode
+  );
 
   return (
     <div className="app-screen">

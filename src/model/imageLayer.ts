@@ -18,7 +18,7 @@ const average = <T>(
 const range = (start: number, stop: number, step: number) =>
   Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step);
 
-const isTransparent = (color: Color) => color[ALPHA] < 0x7f;
+const isTransparent = (color: Color) => typeof color !== "string" && color[ALPHA] < 0x7f;
 
 export function renderImageLayer(
   offset: Coordinate,

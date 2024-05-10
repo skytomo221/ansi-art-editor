@@ -1,10 +1,26 @@
 import React from "react";
-import { Button } from "@blueprintjs/core";
+import { Button, MenuItem } from "@blueprintjs/core";
 import { useChildrenLayerStore } from "../contexts/childrenLayerContext";
 import { renderCompoundLayer } from "../model/compoundLayer";
 import { normalize } from "../model/normalize";
-import { BLUE, Color, GREEN, RED } from "../model/color";
-import { MovableType } from "../model/movableType";
+import {
+  BLUE,
+  Color,
+  GREEN,
+  RED,
+  closestColor,
+  colorCode3bit,
+  colorCode3bitBright,
+  colorCode4bit,
+  colorCode8bit,
+} from "../model/color";
+import { MovableType, convertBit } from "../model/movableType";
+import { ItemRendererProps, Select } from "@blueprintjs/select";
+import {
+  colorModes,
+  useRootLayerDispatch,
+  useRootLayerStore,
+} from "../contexts/rootLayerContext";
 
 const copyToClipboard = async (text: string) => {
   await global.navigator.clipboard.writeText(text);
@@ -69,16 +85,45 @@ function toText(movableTypes: MovableType[]) {
 
 const Clipboard = (): JSX.Element => {
   const store = useChildrenLayerStore();
+  const dispatch = useRootLayerDispatch();
+  const { colorMode } = useRootLayerStore();
+  const setColorMode = (colorMode: (typeof colorModes)[number]) => {
+    dispatch({ type: "UPDATE_COLOR_MODE", colorMode });
+  };
   const handleCopy = () => {
     const layers = store.filter((l) => l.parent === 0);
     const offset = { x: 0, y: 0 };
-    copyToClipboard(toText(normalize(renderCompoundLayer(offset, layers))));
+    copyToClipboard(
+      toText(
+        convertBit(normalize(renderCompoundLayer(offset, layers)), colorMode)
+      )
+    );
   };
 
   return (
-    <Button intent="primary" icon="clipboard" onClick={handleCopy}>
-      結果をコピーする
-    </Button>
+    <div>
+      <Select
+        items={colorModes}
+        itemRenderer={function (
+          item: unknown,
+          itemProps: ItemRendererProps<HTMLLIElement>
+        ): React.JSX.Element {
+          return (
+            <MenuItem
+              key={itemProps.index}
+              text={item.toString()}
+              onClick={itemProps.handleClick}
+            />
+          );
+        }}
+        onItemSelect={setColorMode}
+      >
+        <Button icon="style" text={colorMode} />
+      </Select>
+      <Button intent="primary" icon="clipboard" onClick={handleCopy}>
+        結果をコピーする
+      </Button>
+    </div>
   );
 };
 
